@@ -25,19 +25,31 @@
 						<td><%= table[i].week_id %></td>
 						<td><%= table[i].teamscore %></td>
 						<td><%= table[i].oppscore %></td>
-						
-							<% if(table[i].iswin) { %>
-								<td>W</td>
-							<%} else { %>
-								<td>L</td>
+						<td style="<% if(table[i].iswin) { %>
+								<%=color: black; %>
 							<%} %>
+							<% else { %>
+								<%=color: red; %> 
+							<%} %>">
+							<% if(table[i].iswin) { %>
+								<%= W %>
+							<%} %>
+							<% elseif(table[i].teamscore == table[i].oppscore) { %>
+								<%= D %> 
+							<%} %>
+							<% else { %>
+								<%= L %>
+							<%} %>
+						</td>
 						<td>
 							<%= table[i].proj_spread %>
 						</td>
 						<td>
 							<%= table[i].realspread %>
 						</td>
-						<td>
+						<td style="<% if(table[i].spreaddifference < 0) { %> 
+								<%= color: red %>
+							<%} %>">
 							<%= table[i].spreaddifference %>
 						</td>
 					</tr>
