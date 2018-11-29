@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Results</title>
+</head>
+<body>
+	<div id="header" style="text-align: center">
+		<a href="Football"> - Home -</a>
+	</div>
+	<h1 style="text-align: left;"> <%= team[0].name %></h1>
+	<div id="table" style="text-align: center;">
+		<table border="1">
+			<tr>
+				<th>Week</th>
+				<th>Score</th>
+				<th>Opponenet Score</th>
+				<th>W/L</th>
+				<th>Projected Spread</th>
+				<th>Actual Spread</th>
+				<th>Spread Difference</th>
+			</tr>
+			<%
+				for(var i = 0; i < table.length; i++;) { %>
+					<tr>
+						<td><%= table[i].week_id %></td>
+						<td><%= table[i].teamscore %></td>
+						<td><%= table[i].oppscore %></td>
+						<td style="<% if(table[i].iswin) { %>
+								<%=color: black; %>
+							<%} %>
+							<% else { %>
+								<%=color: red; %> 
+							<%} %>">
+							<% if(table[i].iswin) { %>
+								<%= W %>
+							<%} %>
+							<% elseif(table[i].teamscore == table[i].oppscore) { %>
+								<%= D %> 
+							<%} %>
+							<% else { %>
+								<%= L %>
+							<%} %>
+						</td>
+						<td>
+							<%= table[i].proj_spread %>
+						</td>
+						<td>
+							<%= table[i].realspread %>
+						</td>
+						<td style="<% if(table[i].spreaddifference < 0) { %> 
+								<%= color: red %>
+							<%} %>">
+							<%= table[i].spreaddifference %>
+						</td>
+					</tr>
+				<%} 
+			%>
+		</table>
+	</div>
+</body>
+</html>

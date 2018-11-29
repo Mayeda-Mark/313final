@@ -12,9 +12,15 @@
 		<br>
 		<span>Select an NFL Team</span>
 		<br>
-		<form id="Team"  method="post" action="Football.php">
+		<form id="Team"  method="get" action="/results">
 			<select name="Team1">
 				<option value=""  selected>-Select-</option>
+				<%
+					for(var i = 0; i < team.length; i++ ) { %>
+					<option value="<%= team[i].id %>">
+					<%=team[i].name %></option> 
+				<%}
+				%>
 			</select>
 			<br>
 			<button type="submit" form="Team">Submit</button>
@@ -26,9 +32,21 @@
 	<form id="edit"  method="post" action="Football.php">
 			Team: <select name="Team2">
 				<option value=""  selected>-Select-</option>
+				<%
+					for(var i = 0; i < team.length; i++ ) { %>
+					<option value="<%= team[i].id %>">
+					<%=team[i].name %></option> 
+				<%}
+				%>
 			</select>
 			Week Number: <select name="weekNumber">
 				<option value="" selected>-Select-</option>
+				<%
+					for(var i = 0; i < week.length; i++ ) { %>
+					<option value="<%= week[i].week %>">
+					Week <%=week[i].week %></option> 
+				<%}
+				%>
 			</select>
 			<br>
 			Score: <input type="text" name="score" size="4">
@@ -38,8 +56,5 @@
 			<br>
 			<button type="submit" form="edit">Submit</button>
 		</form>
-	</div>
-	<div id="results" style="text-align: center; background-color: white;">
-	</div>
 </body>
 </html>
