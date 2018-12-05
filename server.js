@@ -33,10 +33,19 @@ app.get("/results", function(req, res){
 	getTeamName(id, function(error, result){
 		console.log(result.name);
 		displayData(id, function(error, result2){
-		//console.log(result2);
 		res.render("results", {team: result, table: result2});
 		});
 	});
+});
+
+app.get("/editDb", function(req, res){
+	var team = Number(req.query.Team2);
+	var week = Number(req.query.weekNumber);
+	var score = Number(req.query.score);
+	var oppScore = Number(req.query.opponentScore);
+	var projSpread = Number(req.query.projectedSpread);
+	var actualSpread = Number(req.query.actualSpread);
+	editDb(team, week, score, oppScore, projSpread, actualSpread);
 });
 //price
 /*app.get("/price", function(req, res) {
@@ -72,9 +81,7 @@ function getTeams(callback){
 	});
 }
 
-app.listen(PORT, function() {
-	console.log("Up and running")
-})
+
 
 function displayData(id, callback){
 	var sql = "SELECT Analysis.Team_id, Analysis.Week_id, Score.teamScore, Score.oppScore, Score.iswin, Spread.proj_spread, Score.realSpread, Analysis.spreadDifference FROM ((Analysis INNER JOIN Spread ON Analysis.spread_id = Spread.id) INNER JOIN Score ON Analysis.score_id = Score.id) WHERE Analysis.Team_id = " + id + " ORDER BY Analysis.Week_id;";
@@ -99,3 +106,60 @@ function getTeamName(id, callback){
 		callback(null, result.rows);
 	});
 }
+
+function editDb(team_id, week, score, oppScore, projSpread, actualSpread) {
+	if (score > oppScore) {
+		var isWin =true;
+	}
+	else {
+		isWin = false;
+	}
+	var spreadDifference = projSpread - actualSpread;
+	var sql = "SELECT proj_spread FROM Spread WHERE team_id = " + team_id + " AND week_id = " + week + ";";
+	pool.query(sql, function(err, result){
+		if(err) {
+			console.log("An error with the database has occurred");
+			console.log(err);
+		}
+	if(result.rowCount == 0){
+		var sql2 = "INSERT INTO Score (Team_id, Week_id, TeamScore, OppScore, realSpread, isWin) VALUES ?";
+		var values = [team_id, week, score, oppScore, actualSpread, isWin];
+		pool.query(sql2, [values], function(err, result1){
+			if (err) { 
+				console.log("An error with the database has occurred");
+				console.log(err);
+			}
+			console.log("Score added")
+			var scoreId = result1.insertId;
+
+			var sql3 = "INSERT INTO Spread (Team_id, Week_id, proj_spread) VALUES ?";
+			var values = [team_id, week, projSpread];
+			pool.query(sql3, [values], function(err, result2){
+				if(err) {
+					console.log("An error with the database has occurred");
+					console.log(err);
+				}
+				console.log("Spread added");
+				var spreadId = result2.insertId;
+
+				var sql4 = "INSERT INTO Analysis (Team_id, Week_id, spread_id, score_id, spreaddifference) VALUES ?";
+				var values = [team_id, week, spreadId, scoreId, spreadDifference];
+				pool.query(sql4, [values], function(err, result3){
+					if(err) {
+						console.log("An error with the database has occurred");
+						console.log(err);
+					}
+					console.log("Analysis added");
+				});
+			});
+		});
+	}
+	else{
+		console.log(result.rows[0].proj_spread);
+	}
+	});
+}
+
+app.listen(PORT, function() {
+	console.log("Up and running")
+})
