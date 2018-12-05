@@ -46,16 +46,12 @@ app.get("/editDb", function(req, res){
 	var projSpread = Number(req.query.projectedSpread);
 	var actualSpread = Number(req.query.actualSpread);
 	editDb(team, week, score, oppScore, projSpread, actualSpread);
+	myFunction();
 });
-//price
-/*app.get("/price", function(req, res) {
-	var weight = parseFloat(req.param('weight'));
-	var type = parseInt(req.param('type'));
-	var price = getPrices(weight, type);
-	var param = { price: price };
-	res.render("price", param);
-})*/
 
+	function myFunction() {
+		alert("Game Updated");
+	}
 function getWeeks(callback){
 	console.log("getWeeks called");
 	var sql = "SELECT * FROM Week ORDER BY id;";
@@ -84,8 +80,9 @@ function getTeams(callback){
 
 
 function displayData(id, callback){
-	var sql = "SELECT Analysis.Team_id, Analysis.Week_id, Score.teamScore, Score.oppScore, Score.iswin, Spread.proj_spread, Score.realSpread, Analysis.spreadDifference FROM ((Analysis INNER JOIN Spread ON Analysis.spread_id = Spread.id) INNER JOIN Score ON Analysis.score_id = Score.id) WHERE Analysis.Team_id = " + id + " ORDER BY Analysis.Week_id;";
-	pool.query(sql, function(err, result){
+	var params = [id];
+	var sql = "SELECT Analysis.Team_id, Analysis.Week_id, Score.teamScore, Score.oppScore, Score.iswin, Spread.proj_spread, Score.realSpread, Analysis.spreadDifference FROM ((Analysis INNER JOIN Spread ON Analysis.spread_id = Spread.id) INNER JOIN Score ON Analysis.score_id = Score.id) WHERE Analysis.Team_id = $1 ORDER BY Analysis.Week_id;";
+	pool.query(sql, params, function(err, result){
 		if(err) {
 			console.log("An error with the database has occurred");
 			console.log(err);
@@ -96,8 +93,9 @@ function displayData(id, callback){
 }
 
 function getTeamName(id, callback){
-	var sql = "SELECT name FROM Team WHERE id = " + id + ";";
-	pool.query(sql, function(err, result){
+	var params = [id];
+	var sql = "SELECT name FROM Team WHERE id = $1 ;";
+	pool.query(sql, params, function(err, result){
 		if(err) {
 			console.log("An error with the database has occurred");
 			console.log(err);
@@ -115,36 +113,40 @@ function editDb(team_id, week, score, oppScore, projSpread, actualSpread) {
 		isWin = false;
 	}
 	var spreadDifference = projSpread - actualSpread;
-	var sql = "SELECT proj_spread FROM Spread WHERE team_id = " + team_id + " AND week_id = " + week + ";";
-	pool.query(sql, function(err, result){
+
+	var params1 = [team_id, week];
+	var params2 = [team_id, week, score, oppScore, actualSpread, isWin];
+	var params3 = [team_id, week, projSpread];
+	var params5 = [team_id, week, spreadDifference];
+
+	var sql = "SELECT proj_spread FROM Spread WHERE team_id = $1 AND week_id = $2 ;";
+	pool.query(sql, params1, function(err, result){
 		if(err) {
 			console.log("An error with the database has occurred");
 			console.log(err);
 		}
 	if(result.rowCount == 0){
-		var sql2 = "INSERT INTO Score (Team_id, Week_id, TeamScore, OppScore, realSpread, isWin) VALUES ?";
-		var values = [team_id, week, score, oppScore, actualSpread, isWin];
-		pool.query(sql2, [values], function(err, result1){
+		var sql2 = "INSERT INTO Score (Team_id, Week_id, TeamScore, OppScore, realSpread, isWin) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;";
+		pool.query(sql2, params2, function(err, result1){
 			if (err) { 
 				console.log("An error with the database has occurred");
 				console.log(err);
 			}
 			console.log("Score added")
-			var scoreId = result1.insertId;
+			var scoreId = result1.rows[0].id;
 
-			var sql3 = "INSERT INTO Spread (Team_id, Week_id, proj_spread) VALUES ?";
-			var values = [team_id, week, projSpread];
-			pool.query(sql3, [values], function(err, result2){
+			var sql3 = "INSERT INTO Spread (Team_id, Week_id, proj_spread) VALUES ($1, $2, $3) RETURNING *;";
+			pool.query(sql3, params3, function(err, result2){
 				if(err) {
 					console.log("An error with the database has occurred");
 					console.log(err);
 				}
 				console.log("Spread added");
-				var spreadId = result2.insertId;
-
-				var sql4 = "INSERT INTO Analysis (Team_id, Week_id, spread_id, score_id, spreaddifference) VALUES ?";
-				var values = [team_id, week, spreadId, scoreId, spreadDifference];
-				pool.query(sql4, [values], function(err, result3){
+				var spreadId = result2.rows[0].id;
+	
+				var params4 = [team_id, week, spreadId, scoreId, spreadDifference];
+				var sql4 = "INSERT INTO Analysis (Team_id, Week_id, spread_id, score_id, spreaddifference) VALUES ($1, $2, $3, $4, $5);";
+				pool.query(sql4, params4, function(err, result3){
 					if(err) {
 						console.log("An error with the database has occurred");
 						console.log(err);
@@ -155,7 +157,30 @@ function editDb(team_id, week, score, oppScore, projSpread, actualSpread) {
 		});
 	}
 	else{
-		console.log(result.rows[0].proj_spread);
+		var sql4 = "UPDATE Score SET TeamScore = $3, OppScore = $4, realSpread = $5, isWin = $6 WHERE Team_id = $1 AND Week_id = $2 ;";
+		pool.query(sql4, params2, function(err, result4){
+			if(err) {
+				console.log("An error with the database has occurred");
+				console.log(err);
+			}
+			console.log("Score Updated");
+		});
+
+		var sql5 = "UPDATE Spread SET Proj_spread = $3 WHERE Team_id = $1 AND Week_id = $2 ;"
+		pool.query(sql5, params3, function(err, result5){
+			if(err) {
+				console.log("An error with the database has occurred");
+				console.log(err);
+			}
+		});
+
+		var sql6 = "UPDATE Analysis SET spreadDifference = $3 WHERE Team_id = $1 AND Week_id = $2 ;"
+		pool.query(sql6, params5, function(err, result6){
+			if(err) {
+				console.log("An error with the database has occurred");
+				console.log(err);
+			}
+		});
 	}
 	});
 }
