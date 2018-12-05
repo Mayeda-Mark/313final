@@ -46,12 +46,8 @@ app.get("/editDb", function(req, res){
 	var projSpread = Number(req.query.projectedSpread);
 	var actualSpread = Number(req.query.actualSpread);
 	editDb(team, week, score, oppScore, projSpread, actualSpread);
-	myFunction();
 });
 
-	function myFunction() {
-		alert("Game Updated");
-	}
 function getWeeks(callback){
 	console.log("getWeeks called");
 	var sql = "SELECT * FROM Week ORDER BY id;";
