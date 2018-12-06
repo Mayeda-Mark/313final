@@ -2,6 +2,7 @@
 
 var express = require("express");
 var app = express();
+var toastr = require("toastr");
 const { Pool } = require("pg");
 const connectionString = process.env.DATABASE_URL || "postgress://footballuser:gohawks@localhost:5432/football";
 const pool = new Pool({connectionString: connectionString});
@@ -46,6 +47,25 @@ app.get("/editDb", function(req, res){
 	var projSpread = Number(req.query.projectedSpread);
 	var actualSpread = Number(req.query.actualSpread);
 	editDb(team, week, score, oppScore, projSpread, actualSpread);
+	Command: toastr["info"]("Database Successfully Updated");
+
+toastr.options = {
+  "closeButton": false,
+  "debug": true,
+  "newestOnTop": false,
+  "progressBar": false,
+  "positionClass": "toast-top-full-width",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "5000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+}
 });
 
 function getWeeks(callback){
