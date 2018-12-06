@@ -2,7 +2,6 @@
 
 var express = require("express");
 var app = express();
-var alert = require('alert-node');
 const { Pool } = require("pg");
 const connectionString = process.env.DATABASE_URL || "postgress://footballuser:gohawks@localhost:5432/football";
 const pool = new Pool({connectionString: connectionString});
@@ -16,7 +15,6 @@ app.set("view engine", "ejs");
 app.get("/", function(req, res) {
 	console.log("root requested");
 	res.write("Root!");
-	alert.alert('Test!');
 	res.end();
 });
 
