@@ -47,7 +47,7 @@ app.get("/editDb", function(req, res){
 	var actualSpread = Number(req.query.actualSpread);
 	editDb(team, week, score, oppScore, projSpread, actualSpread);
 	res.write("Database Successfully Updated");
-	setTimeout(res.redirect('/Football'), 3000);
+	setTimeout(res.render("Football", {week: result, team: result2}), 3000);
 
 });
 
