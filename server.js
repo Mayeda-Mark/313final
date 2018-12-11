@@ -20,11 +20,11 @@ app.get("/", function(req, res) {
 
 app.get("/Football", function(req, res){
 	console.log("Connected to Football.ejs")
-	etWeeks(function(error, result){
+	getWeeks(function(error, result){
 		getTeams(function(error, result2){
 		res.render("Football", {week: result, team: result2});
 		});
-	});g
+	});
 })
 
 app.get("/results", function(req, res){
