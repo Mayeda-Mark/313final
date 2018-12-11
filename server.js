@@ -46,8 +46,8 @@ app.get("/editDb", function(req, res){
 	var projSpread = Number(req.query.projectedSpread);
 	var actualSpread = Number(req.query.actualSpread);
 	editDb(team, week, score, oppScore, projSpread, actualSpread);
-	res.write("<!DOCTYPE html><head><title>Success</title></head><body><script>alert('Database Successfully Updated!');</script></body></html>");
-	//res.render("Football", {week: result, team: result2});
+	//res.write("<!DOCTYPE html><head><title>Success</title></head><body><script>alert('Database Successfully Updated!');</script></body></html>");
+	res.render("Football", {week: result, team: result2});
 	res.redirect('back')
 });
 
@@ -183,6 +183,8 @@ function editDb(team_id, week, score, oppScore, projSpread, actualSpread) {
 	}
 	});
 }
+
+
 
 app.listen(PORT, function() {
 	console.log("Up and running")
