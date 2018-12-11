@@ -48,7 +48,7 @@ app.get("/editDb", function(req, res){
 	editDb(team, week, score, oppScore, projSpread, actualSpread);
 	//res.write("<!DOCTYPE html><head><title>Success</title></head><body><script>alert('Database Successfully Updated!');</script></body></html>");
 	res.render("Football", {week: result, team: result2});
-	res.redirect('back')
+	//res.redirect('back')
 });
 
 function getWeeks(callback){
