@@ -20,11 +20,11 @@ app.get("/", function(req, res) {
 
 app.get("/Football", function(req, res){
 	console.log("Connected to Football.ejs")
-	getWeeks(function(error, result){
+	etWeeks(function(error, result){
 		getTeams(function(error, result2){
 		res.render("Football", {week: result, team: result2});
 		});
-	});
+	});g
 })
 
 app.get("/results", function(req, res){
@@ -47,8 +47,13 @@ app.get("/editDb", function(req, res){
 	var actualSpread = Number(req.query.actualSpread);
 	editDb(team, week, score, oppScore, projSpread, actualSpread);
 	//res.write("<!DOCTYPE html><head><title>Success</title></head><body><script>alert('Database Successfully Updated!');</script></body></html>");
-	res.render("Football", {week: result, team: result2});
+	//res.render("Football", {week: result, team: result2});
 	//res.redirect('back')
+	getWeeks(function(error, result){
+		getTeams(function(error, result2){
+		res.render("Football", {week: result, team: result2});
+		});
+	});
 });
 
 function getWeeks(callback){
