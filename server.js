@@ -14,7 +14,7 @@ app.set("view engine", "ejs");
 //Test
 app.get("/", function(req, res) {
 	console.log("root requested");
-	res.write("<!DOCTYPE html><head><title>Success</title></head><body><script>alert('Database Successfully Updated!');</script></body></html>");
+	res.write("Root!");
 	res.end();
 });
 
@@ -47,8 +47,8 @@ app.get("/editDb", function(req, res){
 	var actualSpread = Number(req.query.actualSpread);
 	editDb(team, week, score, oppScore, projSpread, actualSpread);
 	res.write("<!DOCTYPE html><head><title>Success</title></head><body><script>alert('Database Successfully Updated!');</script></body></html>");
-	res.render("Football", {week: result, team: result2});
-
+	//res.render("Football", {week: result, team: result2});
+	res.redirect('../Football')
 });
 
 function getWeeks(callback){
