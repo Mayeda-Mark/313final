@@ -33,7 +33,7 @@ app.get("/results", function(req, res){
 	getTeamName(id, function(error, result){
 		console.log(result.name);
 		displayData(id, function(error, result2){
-		res.render("results", {team: result, table: result2});
+		res.render("results", {team: result, table: result2, id: id});
 		});
 	});
 });
