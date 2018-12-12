@@ -10,7 +10,7 @@
 		<a href="Football"> - Home -</a>
 	</div>
 	<% var teamId = team[0].id; %>
-	<h1 style="text-align: left;"> <%= team[0].name %><%= teamId %></h1>
+	<h1 style="text-align: left;"> <%= team[0].name %><%= teamId %><%= team[0].id %></h1>
 	<div id="table" style="text-align: center;">
 		<table border="1">
 			<tr>
@@ -48,7 +48,7 @@
 			%>
 		</table>
 	</div>
-	<!--<% var teamId = team[0].id; %>-->
+	<!--<% var teamId = team[0].id; %>
 	<script>
 		var id = <%= teamId %>;
 		var colorLeft = "";
@@ -222,6 +222,6 @@
 	}
 	var txt = "'border-left:100px solid " + colorLeft + "; border-right:100px solid " + colorRight + ";'";
 	document.getElementById('body').style = txt; 
-	</script>
+	</script>-->
 </body>
 </html>
