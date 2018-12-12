@@ -4,7 +4,7 @@
 	<title>Results</title>
 	<link rel="stylesheet" type="text/css" href="football.css">
 </head>
-<body id="body">
+<body id="body" onload="border();">
 	<div id="header" style="text-align: center">
 		<a href="Football"> - Home -</a>
 	</div>
@@ -48,6 +48,7 @@
 	</div>
 	<% var teamId = id; %>
 	<script>
+		function border() {
 		var x = parseInt(<%= teamId %>);
 		console.log(x);
 		var colorLeft = "";
@@ -222,6 +223,7 @@
 	}
 	var txt = "'border-left:100px solid " + colorLeft + "; border-right:100px solid " + colorRight + ";'";
 	document.getElementById('body').style = txt; 
+}
 	</script>
 </body>
 </html>
