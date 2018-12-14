@@ -8,6 +8,7 @@
 	<div id="header" style="text-align: center">
 		<a href="Football"> - Home -</a>
 	</div>
+	<div id="test">Test</div>
 	<h1 style="text-align: left;"> <%= team[0].name %></h1>
 	<div id="table" style="text-align: center;">
 		<table border="1">
@@ -48,6 +49,7 @@
 	</div>
 	<% var teamId = id; %>
 	<script>
+		console.log(document.getElementById('test'));
 		function border() {
 			var x = <%= teamId %>;
 			console.log(x);
