@@ -4,11 +4,12 @@
 	<title>Results</title>
 	<link rel="stylesheet" type="text/css" href="football.css">
 </head>
-<body id="bodyId" onload="border();">
+<body id="bodyId" onload="border(); picture();">
 	<div id="header" style="text-align: center">
 		<a href="Football"> - Home -</a>
 	</div>
 	<h1 style="text-align: left;"> <%= team[0].name %></h1>
+	<span id="picture"></span>
 	<div id="tableFill" style="text-align: center;">
 		<table border="1">
 			<tr>
@@ -224,6 +225,11 @@
 	document.getElementById('bodyId').style.borderLeft = "100px solid " + colorLeft;
 	document.getElementById('bodyId').style.borderRight = "100px solid " + colorRight;
 }
+
+picture() {
+	document.getElementById('picture').innerHTML = "<img src='" + <%= team[0].name %> + ".jpg' width='150' height='100'>"
+}
 	</script>
+
 </body>
 </html>
